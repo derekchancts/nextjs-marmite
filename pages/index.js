@@ -1,5 +1,5 @@
 import { createClient } from 'contentful';
-import RecipeCard from './../components/RecipeCard';
+import RecipeCard from '../components/RecipeCard.js';
 
 
 export default function Recipes({ recipes }) {
@@ -8,9 +8,6 @@ export default function Recipes({ recipes }) {
   return (
     <div className="recipe-list">
       {recipes && recipes.map(recipe => (
-        // <div key={receipe.sys.id}>
-        //   {receipe.fields.title}
-        // </div>
         <RecipeCard key={recipe.sys.id} recipe={recipe} />
       ))}
 
