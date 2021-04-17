@@ -1,5 +1,5 @@
 import { createClient } from 'contentful';
-import RecipeCard from '../components/RecipeCard.js';
+import RecipeCard from '../components/RecipeCard'
 
 
 export default function Recipes({ recipes }) {
