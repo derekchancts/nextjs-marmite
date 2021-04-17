@@ -1,7 +1,125 @@
-export default function RecipeDetails() {
+import { createClient } from 'contentful';
+import RecipeCard from '../../components/RecipeCard';
+import Image from 'next/image';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+
+
+const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID,
+  accessToken: process.env.CONTENTFUL_ACCESS_KEY,
+});
+
+
+export default function RecipeDetails({ recipe }) {
+  const { featuredImage, title, cookingTime, ingredients, method } = recipe.fields;
+
   return (
     <div>
-      Recipe Details
+      {/* <RecipeCard key={recipe.sys.id} recipe={recipe} /> */}
+      <div className="banner">
+        <Image 
+          src={'https:' + featuredImage.fields.file.url}
+          alt={title}
+          width={featuredImage.fields.file.details.image.width * 4}
+          height={featuredImage.fields.file.details.image.height * 4}
+        />
+        <h2>{title}</h2>
+      </div>
+
+      <div className="info">
+        <p>Take about {cookingTime} mins to cook.</p>
+        <h3>Ingredients: </h3>
+        {ingredients && ingredients.map((ingredient, index) => (
+          <span key={index}> {ingredient} </span>
+        ))}
+      </div>
+
+      <div className="method">
+        <h3>Method:</h3>
+        <div>{documentToReactComponents(method)}</div>
+      </div>
+
+      <style jsx>{`
+        h2,h3 {
+          text-transform: uppercase;
+        }
+
+        .banner h2 {
+          margin: 0;
+          background: #fff;
+          display: inline-block;
+          padding: 20px;
+          position: relative;
+          top: -60px;
+          left: -10px;
+          // transform: rotateZ(-1deg);
+          box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+        }
+
+        .info p {
+          margin: 0;
+        }
+
+        .info span::after {
+          content: ", ";
+        }
+
+        .info span:last-child::after {
+          content: ".";
+        }
+      `}</style>
+
     </div>
   )
-}
+};
+
+
+
+export const getStaticPaths = async () => {
+  // const client = createClient({
+  //   space: process.env.CONTENTFUL_SPACE_ID,
+  //   accessToken: process.env.CONTENTFUL_ACCESS_KEY,
+  // });
+
+  const res = await client.getEntries({ content_type: 'receipe' });
+
+  const paths = res.items.map(item => {
+    return {
+      params: { slug: item.fields.slug }
+    }
+  })
+
+  return {
+    // paths [{params: { slug: slug }}, {}, {}]  - an array of objects
+    // nextjs will know which pages will need to be generated based on the paths
+    paths,
+    fallback: false
+  }
+};
+
+
+
+// Will get the items / item and then be injected as a prop into a page
+// For each of the paths generated under getStaticPaths, it will run getStaticProps each time
+export async function getStaticProps(context) {
+  const slug = context.params.slug;     // params: { slug: item.fields.slug } from getStaticPaths
+
+  // const client = createClient({
+  //   space: process.env.CONTENTFUL_SPACE_ID,
+  //   accessToken: process.env.CONTENTFUL_ACCESS_KEY,
+  // });
+
+  // this returns an array even though there's only 1 item inside it
+  const res = await client.getEntries({ 
+    content_type: 'receipe',
+    'fields.slug': slug
+  });
+
+  return {
+    props: {
+      recipe: res.items[0]
+    }
+  }
+  
+};
+
