@@ -36,9 +36,9 @@ export async function getStaticProps() {
   return {
     props: {
       recipes: res.items,
-      revalidate: 1  // will revalidate/refresh the page (if it has any updated data) after x seconds 
+    },
+    revalidate: 1  // will revalidate/refresh the page (if it has any updated data) after x seconds 
                      // after a user visits the page. so, subsequent users will see the updated page details 
-    }
   }
   
 };
