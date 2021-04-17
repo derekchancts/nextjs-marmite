@@ -126,7 +126,7 @@ export async function getStaticProps(context) {
     return {
       redirect: {
         destination: '/',
-        permanent: false  // we might have the slug in the future. So, set permanent redirect to false here
+        permanent: false  // we might have the slug in the future. So, set permanent redirect to false here 
       }
     }
   };
