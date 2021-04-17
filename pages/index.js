@@ -23,8 +23,9 @@
 // };
 
 
+
+import RecipeCard from '../components/RecipeCard.js'
 import { createClient } from 'contentful'
-import RecipeCard from '../components/RecipeCard'
 
 
 export async function getStaticProps() {
