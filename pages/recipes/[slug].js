@@ -1,6 +1,7 @@
 import { createClient } from 'contentful';
 import Image from 'next/image';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import Skeleton from '../../components/Skeleton';
 
 
 const client = createClient({
@@ -10,6 +11,12 @@ const client = createClient({
 
 
 export default function RecipeDetails({ recipe }) {
+
+  // after we set the fallback to true, it will use the getStaticPaths and try to generate a "temp" page until
+  // the new page / data is fetched and generated. 
+  // if (!recipe) return <div>Loading...</div>
+  if (!recipe) return <Skeleton />
+
   const { featuredImage, title, cookingTime, ingredients, method } = recipe.fields;
 
   return (
@@ -91,7 +98,8 @@ export const getStaticPaths = async () => {
     // paths [{params: { slug: slug }}, {}, {}]  - an array of objects
     // nextjs will know which pages will need to be generated based on the paths
     paths,
-    fallback: false
+    //fallback: false  // if fallback is set to false, then we will get the 404 page
+    fallback: true
   }
 };
 
@@ -117,8 +125,14 @@ export async function getStaticProps(context) {
     props: {
       recipe: res.items[0],
     },
-    revalidate: 1  // will revalidate/refresh the page (if it has any updated data) after x seconds 
-                     // after a user visits the page. so, subsequent users will see the updated page details 
+    revalidate: 1    // INCREMENTAL STATIC REGENERATION
+                     // will revalidate/refresh the page (if it has any updated data) after x seconds, "IF THE PAGE ALREADY EXISTS"
+                     // after a user visits the page. so, subsequent users will see the updated page details
+                     // if a new page is added, then the new page won't be "statically regenerated", unless
+                     // a "Fallback page" is used or set to true. 
+                     // Fallback pages are placeholder content whilst Nextjs fetches new data for the page
+    
+                     
   }
   
 };

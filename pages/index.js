@@ -37,8 +37,12 @@ export async function getStaticProps() {
     props: {
       recipes: res.items,
     },
-    revalidate: 1  // will revalidate/refresh the page (if it has any updated data) after x seconds 
-                     // after a user visits the page. so, subsequent users will see the updated page details 
+    revalidate: 1    // INCREMENTAL STATIC REGENERATION
+                     // will revalidate/refresh the page (if it has any updated data) after x seconds, "IF THE PAGE ALREADY EXISTS"
+                     // after a user visits the page. so, subsequent users will see the updated page details
+                     // if a new page is added, then the new page won't be "statically regenerated", unless 
+                     // a "Fallback page" is used or set to true
+                     // Fallback pages are placeholder content whilst Nextjs fetches new data for the page
   }
   
 };
