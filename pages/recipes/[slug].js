@@ -122,7 +122,7 @@ export async function getStaticProps(context) {
   });
 
   // if we cannot finf the item / slug
-  if (!res.item.length) {
+  if (!res.items.length) {
     return {
       redirect: {
         destination: '/',
