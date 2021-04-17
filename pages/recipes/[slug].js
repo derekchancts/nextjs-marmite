@@ -1,5 +1,4 @@
 import { createClient } from 'contentful';
-import RecipeCard from '../../components/RecipeCard';
 import Image from 'next/image';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
@@ -15,7 +14,6 @@ export default function RecipeDetails({ recipe }) {
 
   return (
     <div>
-      {/* <RecipeCard key={recipe.sys.id} recipe={recipe} /> */}
       <div className="banner">
         <Image 
           src={'https:' + featuredImage.fields.file.url}
