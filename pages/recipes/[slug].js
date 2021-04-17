@@ -121,6 +121,16 @@ export async function getStaticProps(context) {
     'fields.slug': slug
   });
 
+  // if we cannot finf the item / slug
+  if (!res.item.length) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false  // we might have the slug in the future. So, set permanent redirect to false here
+      }
+    }
+  };
+
   return {
     props: {
       recipe: res.items[0],
